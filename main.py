@@ -1,6 +1,8 @@
 from twython import Twython
 import json
 import pandas as pd
+from nltk.twitter import Twitter
+
 
 def FindUsers(query, country):
     # Search tweets
