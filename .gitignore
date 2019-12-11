@@ -9,6 +9,7 @@ __pycache__/
 
 #Vscode
 .vscode/**
+
 # Distribution / packaging
 .Python
 build/
@@ -130,3 +131,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#Credentials
+twitter_credentials.json

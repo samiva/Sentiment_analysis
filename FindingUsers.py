@@ -32,7 +32,7 @@ def FindUsers(query, country):
 def RemoveDuplicates(filename):
     df = pd.read_csv(filename)
     df.drop_duplicates(inplace=True)
-    df.to_csv(filename, header=False, index=False)
+    df.to_csv(filename, index=False,encoding='windows-1252')
 
 
 def FindClubUsers(query, clubs, lang, league, country):
@@ -44,6 +44,10 @@ def FindClubUsers(query, clubs, lang, league, country):
     print(query['q'] + '\t' + query['lang'])
     FindUsers(query, country)
     for f in clubs:
+        query['q'] = f
+        query['lang'] = lang
+        print(query['q'] + '\t' + query['lang'])
+        FindUsers(query, country)
         query['q'] = league + ' ' + f
         query['lang'] = lang
         print(query['q'] + '\t' + query['lang'])
@@ -51,16 +55,15 @@ def FindClubUsers(query, clubs, lang, league, country):
         query['lang'] = 'en'
         print(query['q'] + '\t' + query['lang'])
         FindUsers(query, country)
-    RemoveDuplicates('./data/' + country + 'Users.csv')
 
 
 def CreateTwitterCredentialJSON():
     # Enter your keys/secrets as strings in the following fields
     credentials = {}
-    credentials['CONSUMER_KEY'] = "j976pWHrkFM7DKdfpObJyLlQK"
-    credentials['CONSUMER_SECRET'] = "GiqKmdlbh1Rz8kJZ1JA0s2kuOtKLNcg1b4nEivYf6MpHfkMdIY"
-    credentials['ACCESS_TOKEN'] = "1202117599062085632-2Zoxet3yeeZ4OLnYd1Y581IaWoUXlR"
-    credentials['ACCESS_SECRET'] = "gYtM1810SxWDWSdNBwB0LkSdCKxeApL12mBkWKXxvfn71"
+    credentials['CONSUMER_KEY'] = "qu3BT68gQhNuQcHTsKJypCQGe"
+    credentials['CONSUMER_SECRET'] = "OP2yg5JZVjRckHtXjPcBvNKVdxaGE3j6JuaxkFylYy1DOhKU5i"
+    credentials['ACCESS_TOKEN'] = "1101516520436445184-kDzQ7DvIShucFYqYwY3EdBhwwZLXfK"
+    credentials['ACCESS_SECRET'] = "BD5JHNW4dqas2AUkMSKFcKw9MJuWUqB0nwcQAvFOTs5DN"
 
     # Save the credentials object to file
     with open("twitter_credentials.json", "w") as file:
@@ -68,15 +71,22 @@ def CreateTwitterCredentialJSON():
 
 
 # creating twitter credentials as a JSON
-# CreateTwitterCredentialJSON()
+CreateTwitterCredentialJSON()
 
 # Query q
 FinlandFootballClubs = ['#HJKHelsinki', '#KuPS', '#honka',
                         '#TurkuPS', '#TampereUnited', '#PK35Vantaa']
 SwedenFootballClubs = ['#ifkgbg', '#malmo_ff', 'aik', ]
+SwedenIceHockeyClubs = ['#frölunda', '#Färjestad', 'Brynäs', 'Luleå']
+
+FinlandIceHockeyClubs = ['#HPK', '#Kärpät', '#jypliiga']
 
 FinlandLeague = '#Veikkausliiga'
+FinlandIceHockeyLeague = '#liiga'
+
 SwedenLeague = '#Allsvenskan'
+SwedenIceHockeyLeague = '#SHL'
+
 # Reading the credentials
 with open("twitter_credentials.json", "r") as file:
     creds = json.load(file)
@@ -92,6 +102,15 @@ query = {'q': '',
          'tweet_mode': 'extended',
          'lang': ''
          }
+print("Football")
 FindClubUsers(query, FinlandFootballClubs,
               'fi', FinlandLeague, 'Finland')
 FindClubUsers(query, SwedenFootballClubs, 'sv', SwedenLeague, 'Sweden')
+print("Ice Hokey")
+FindClubUsers(query, FinlandIceHockeyClubs,
+              'fi', FinlandIceHockeyLeague, 'Finland')
+FindClubUsers(query, SwedenIceHockeyClubs,
+              'sv', SwedenIceHockeyLeague, 'Sweden')
+
+RemoveDuplicates('./data/' + 'Finland' + 'Users.csv')
+RemoveDuplicates('./data/' + 'Sweden' + 'Users.csv')
