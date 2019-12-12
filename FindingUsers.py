@@ -4,57 +4,76 @@ import pandas as pd
 from nltk.twitter import Twitter
 
 
-def FindUsers(query, country):
+def FindUsers(query, country, league):
     # Search tweets
-    dict_ = {'user': [], 'date': [], 'full_text': [],
-             'favorite_count': [], 'lang': []}
+    dict_ = {'user': [],
+             'favorite_count': [], 'id': []}
     for status in python_tweets.search(**query)['statuses']:
         dict_['user'].append(status['user']['screen_name'])
-        dict_['date'].append(status['created_at'])
-        # cleaning the text from junk characters like emojies except nordic layout
-        clean_str = ''.join(
-            [c for c in status['full_text'] if ord(c) < 128 or ord(c) == 228 or ord(c) == 229 or ord(c) == 246])
-        dict_['full_text'].append(clean_str)
-        dict_['lang'].append(status['lang'])
+        dict_['id'].append(status['user']['id_str'])
         dict_['favorite_count'].append(status['favorite_count'])
 
     # Structure data in a pandas DataFrame for easier manipulation
     df = pd.DataFrame(dict_)
     print(df.size)
     df.sort_values(by='favorite_count', inplace=True, ascending=False)
-    df.head(5).to_csv('./data/' + country + 'Data.csv', mode='a',
-                      header=False, index=False, encoding='windows-1252')
-    df.drop_duplicates(subset='user', keep='first', inplace=True)
-    df.head(5).to_csv('./data/' + country + 'Users.csv', columns=['user'], mode='a',
-                      header=False, index=False, encoding='windows-1252')
+    # df.head(5).to_csv('./data/' + country + 'Data.csv', mode='a',
+    #                   header=False, index=False, encoding='utf-8')
+    df.drop_duplicates(subset='id', keep='first', inplace=True)
+    df.head(5).to_csv('./data/' + country + league + 'Users.csv', columns=['user'], mode='a',
+                      header=False, index=False, encoding='utf-8')
+    df.head(5).to_csv('./data/' + country + league + 'UsersID.csv', columns=['id'], mode='a',
+                      header=False, index=False, encoding='utf-8')
 
 
 def RemoveDuplicates(filename):
-    df = pd.read_csv(filename)
+    df = pd.read_csv(filename, header=None)
     df.drop_duplicates(inplace=True)
-    df.to_csv(filename, index=False,encoding='windows-1252')
+    df.to_csv(filename, header=False, index=False, encoding='utf-8')
 
 
 def FindClubUsers(query, clubs, lang, league, country):
     query['q'] = league
     query['lang'] = lang
     print(query['q'] + '\t' + query['lang'])
-    FindUsers(query, country)
+    FindUsers(query, country, league)
     query['lang'] = 'en'
     print(query['q'] + '\t' + query['lang'])
-    FindUsers(query, country)
+    FindUsers(query, country, league)
     for f in clubs:
         query['q'] = f
         query['lang'] = lang
         print(query['q'] + '\t' + query['lang'])
-        FindUsers(query, country)
+        FindUsers(query, country, league)
         query['q'] = league + ' ' + f
         query['lang'] = lang
         print(query['q'] + '\t' + query['lang'])
-        FindUsers(query, country)
+        FindUsers(query, country, league)
         query['lang'] = 'en'
         print(query['q'] + '\t' + query['lang'])
-        FindUsers(query, country)
+        FindUsers(query, country, league)
+    RemoveDuplicates('./data/' + country + league + 'Users.csv')
+
+
+def FindUserIDByName(filename):
+    df = pd.read_csv(filename, header=None)
+    df = df.applymap(str)
+    x = df.to_string(header=False,
+                     index=False,
+                     index_names=False).split('\n')
+    vals = [','.join(ele.split()) for ele in x]
+    # Query
+    query = {'q': '',
+             'count': 1,
+             }
+    dict_ = {'user': []}
+    my_string = ','.join(map(str, vals))
+    users = python_tweets.lookup_user(screen_name=my_string)
+    for user in users:
+        dict_['user'].append(user['id_str'])
+    df1 = pd.DataFrame(dict_)
+    df1.to_csv('./data/FinlandUsersID.csv', columns=['user'],
+               header=False, index=False, encoding='uft-8')
 
 
 def CreateTwitterCredentialJSON():
@@ -103,14 +122,19 @@ query = {'q': '',
          'lang': ''
          }
 print("Football")
-FindClubUsers(query, FinlandFootballClubs,
-              'fi', FinlandLeague, 'Finland')
-FindClubUsers(query, SwedenFootballClubs, 'sv', SwedenLeague, 'Sweden')
-print("Ice Hokey")
-FindClubUsers(query, FinlandIceHockeyClubs,
-              'fi', FinlandIceHockeyLeague, 'Finland')
-FindClubUsers(query, SwedenIceHockeyClubs,
-              'sv', SwedenIceHockeyLeague, 'Sweden')
+# FindClubUsers(query, FinlandFootballClubs,
+#               'fi', FinlandLeague, 'Finland')
+# FindClubUsers(query, SwedenFootballClubs, 'sv', SwedenLeague, 'Sweden')
+# print("Ice Hokey")
+# FindClubUsers(query, FinlandIceHockeyClubs,
+#               'fi', FinlandIceHockeyLeague, 'Finland')
+# FindClubUsers(query, SwedenIceHockeyClubs,
+#               'sv', SwedenIceHockeyLeague, 'Sweden')
 
-RemoveDuplicates('./data/' + 'Finland' + 'Users.csv')
-RemoveDuplicates('./data/' + 'Sweden' + 'Users.csv')
+# RemoveDuplicates('./data/' + 'Finland' + FinlandLeague + 'Users.csv')
+# RemoveDuplicates('./data/' + 'Sweden' + FinlandLeague + 'Users.csv')
+# RemoveDuplicates('./data/' + 'Finland' + 'UsersID.csv')
+# RemoveDuplicates('./data/' + 'Sweden' + 'UsersID.csv')
+
+
+# FindUserIDByName('./data/FinlandUsers.csv')
