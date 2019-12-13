@@ -93,14 +93,14 @@ def CreateTwitterCredentialJSON():
 CreateTwitterCredentialJSON()
 
 # Query q
-DenmarkFootballClubs = ['#HJKHelsinki', '#KuPS', '#honka',
-                        '#TurkuPS', '#TampereUnited', '#PK35Vantaa']
+DenmarkFootballClubs = ['#achorsens', '#Brøndby', '#aabfcn',
+                        '#HobroIK', '#randersfc', '#fcklive']
 NorwayFootballClubs = ['#ifkgbg', '#malmo_ff', 'aik', ]
 NorwayIceHockeyClubs = ['#frölunda', '#Färjestad', 'Brynäs', 'Luleå']
 
 DenmarkIceHockeyClubs = ['#HPK', '#Kärpät', '#jypliiga']
 
-DenmarkLeague = '#Veikkausliiga'
+DenmarkLeague = '#sldk'
 DenmarkIceHockeyLeague = '#liiga'
 
 NorwayLeague = '#Allsvenskan'
