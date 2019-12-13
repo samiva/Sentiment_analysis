@@ -79,13 +79,13 @@ def FindUserIDByName(filename):
 def CreateTwitterCredentialJSON():
     # Enter your keys/secrets as strings in the following fields
     credentials = {}
-    credentials['CONSUMER_KEY'] = "qu3BT68gQhNuQcHTsKJypCQGe"
-    credentials['CONSUMER_SECRET'] = "OP2yg5JZVjRckHtXjPcBvNKVdxaGE3j6JuaxkFylYy1DOhKU5i"
-    credentials['ACCESS_TOKEN'] = "1101516520436445184-kDzQ7DvIShucFYqYwY3EdBhwwZLXfK"
-    credentials['ACCESS_SECRET'] = "BD5JHNW4dqas2AUkMSKFcKw9MJuWUqB0nwcQAvFOTs5DN"
+    credentials['CONSUMER_KEY'] = "j976pWHrkFM7DKdfpObJyLlQK"
+    credentials['CONSUMER_SECRET'] = "GiqKmdlbh1Rz8kJZ1JA0s2kuOtKLNcg1b4nEivYf6MpHfkMdIY"
+    credentials['ACCESS_TOKEN'] = "1202117599062085632-2Zoxet3yeeZ4OLnYd1Y581IaWoUXlR"
+    credentials['ACCESS_SECRET'] = "gYtM1810SxWDWSdNBwB0LkSdCKxeApL12mBkWKXxvfn71"
 
     # Save the credentials object to file
-    with open("twitter_credentials.json", "w") as file:
+    with open("twitter_credentials_sentanal.json", "w") as file:
         json.dump(credentials, file)
 
 
@@ -107,7 +107,7 @@ NorwayLeague = '#Allsvenskan'
 NorwayIceHockeyLeague = '#SHL'
 
 # Reading the credentials
-with open("twitter_credentials.json", "r") as file:
+with open("twitter_credentials_sentanal.json", "r") as file:
     creds = json.load(file)
 
 
