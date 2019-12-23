@@ -95,16 +95,17 @@ CreateTwitterCredentialJSON()
 # Query q
 DenmarkFootballClubs = ['#achorsens', '#Brøndby', '#aabfcn',
                         '#HobroIK', '#randersfc', '#fcklive']
-NorwayFootballClubs = ['#ifkgbg', '#malmo_ff', 'aik', ]
-NorwayIceHockeyClubs = ['#frölunda', '#Färjestad', 'Brynäs', 'Luleå']
+NorwayFootballClubs = ['#AlltidUansett', '#LSKLIVE', '#FKHVIK' ]
 
-DenmarkIceHockeyClubs = ['#HPK', '#Kärpät', '#jypliiga']
+DenmarkIceHockeyClubs = ['#HerningBlueFox', '#esbjergenergy', '#odensebulldogs', '#aalborgpirates']
+NorwayIceHockeyClubs = ['#lillehammerik', '#stavangeroilers', '#manglerudstar', '#storhamardragons']
+
 
 DenmarkLeague = '#sldk'
-DenmarkIceHockeyLeague = '#liiga'
+DenmarkIceHockeyLeague = '#Metalligaen'
 
-NorwayLeague = '#Allsvenskan'
-NorwayIceHockeyLeague = '#SHL'
+NorwayLeague = '#eliteserien'
+NorwayIceHockeyLeague = '#getligaen'
 
 # Reading the credentials
 with open("twitter_credentials_sentanal.json", "r") as file:
