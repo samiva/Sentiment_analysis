@@ -18,7 +18,7 @@ for n in names:
             if(row['lang'] != 'en'):
                 try:
                     txt = translator.translate(
-                        row['text'], dest='en', src=row['lang']).text
+                        row['text'], dest='en').text
                     clean_str = ''.join(
                         [c for c in txt if ord(c) < 128 or ord(c) == 228 or ord(c) == 229 or ord(c) == 246])
                     df.loc[index, 'translated'] = clean_str
