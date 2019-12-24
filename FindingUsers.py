@@ -17,8 +17,6 @@ def FindUsers(query, country, league):
     df = pd.DataFrame(dict_)
     print(df.size)
     df.sort_values(by='favorite_count', inplace=True, ascending=False)
-    # df.head(5).to_csv('./data/' + country + 'Data.csv', mode='a',
-    #                   header=False, index=False, encoding='utf-8')
     df.drop_duplicates(subset='id', keep='first', inplace=True)
     df.head(5).to_csv('./data/' + country + league + 'Users.csv', columns=['user'], mode='a',
                       header=False, index=False, encoding='utf-8')

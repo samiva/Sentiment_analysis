@@ -43,5 +43,7 @@ for index, row in df.iterrows():
 flat_list = [item for sublist in tokens for item in sublist]
 tokens_count = Counter(flat_list)
 df = pd.DataFrame(tokens_count.most_common(10), columns=['terms', 'frequency'])
-df.plot(kind='bar', x='terms')
+df['frequency'] = df['frequency'].apply(lambda x: (x / 400) * 100)
+print(df)
+df.plot(kind='barh', x='terms', y='frequency')
 plt.show()
