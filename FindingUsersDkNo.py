@@ -75,6 +75,20 @@ def FindUserIDByName(filename):
     df1.to_csv('./data/DenmarkUsersID.csv', columns=['user'],
                header=False, index=False, encoding='uft-8')
 
+def FindClubUsersCountrySport(country, sport):
+    if country=="denmark":
+        if sport == "icehockey":
+            FindClubUsers(query, DenmarkIceHockeyClubs, 'dk', DenmarkIceHockeyLeague, 'Denmark')
+        elif sport == 'football':
+            FindClubUsers(query, DenmarkFootballClubs, 'dk', DenmarkLeague, 'Denmark')
+    elif country == 'norway':
+        if sport=='icehockey':
+            FindClubUsers(query, NorwayIceHockeyClubs, 'no', NorwayIceHockeyLeague, 'Norway')
+        elif sport == 'football':
+            FindClubUsers(query, NorwayFootballClubs, 'no', NorwayLeague, 'Norway')
+    else:
+        print('No such country')
+        
 
 def CreateTwitterCredentialJSON():
     # Enter your keys/secrets as strings in the following fields
@@ -95,16 +109,17 @@ CreateTwitterCredentialJSON()
 # Query q
 DenmarkFootballClubs = ['#achorsens', '#Brøndby', '#aabfcn',
                         '#HobroIK', '#randersfc', '#fcklive']
-NorwayFootballClubs = ['#ifkgbg', '#malmo_ff', 'aik', ]
-NorwayIceHockeyClubs = ['#frölunda', '#Färjestad', 'Brynäs', 'Luleå']
+NorwayFootballClubs = ['#AlltidUansett', '#LSKLIVE', '#FKHVIK' ]
 
-DenmarkIceHockeyClubs = ['#HPK', '#Kärpät', '#jypliiga']
+DenmarkIceHockeyClubs = ['#HerningBlueFox', '#esbjergenergy', '#odensebulldogs', '#aalborgpirates']
+NorwayIceHockeyClubs = ['#lillehammerik', '#stavangeroilers', '#manglerudstar', '#storhamardragons']
+
 
 DenmarkLeague = '#sldk'
-DenmarkIceHockeyLeague = '#liiga'
+DenmarkIceHockeyLeague = '#Metalligaen'
 
-NorwayLeague = '#Allsvenskan'
-NorwayIceHockeyLeague = '#SHL'
+NorwayLeague = '#eliteserien'
+NorwayIceHockeyLeague = '#getligaen'
 
 # Reading the credentials
 with open("twitter_credentials_sentanal.json", "r") as file:
