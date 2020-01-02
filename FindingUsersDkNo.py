@@ -111,8 +111,10 @@ DenmarkFootballClubs = ['#achorsens', '#Brøndby', '#aabfcn',
                         '#HobroIK', '#randersfc', '#fcklive']
 NorwayFootballClubs = ['#AlltidUansett', '#LSKLIVE', '#FKHVIK' ]
 
-DenmarkIceHockeyClubs = ['#HerningBlueFox', '#esbjergenergy', '#odensebulldogs', '#aalborgpirates']
-NorwayIceHockeyClubs = ['#lillehammerik', '#stavangeroilers', '#manglerudstar', '#storhamardragons']
+DenmarkIceHockeyClubs = ['#HerningBlueFox', '#esbjergenergy', '#odensebulldogs',
+                        '#aalborgpirates', '#whitehawks']
+NorwayIceHockeyClubs = ['#lillehammerik', '#stavangeroilers', '#manglerudstar',
+                        '#storhamardragons', '#StjernenHockey', '#spartahockey']
 
 
 DenmarkLeague = '#sldk'

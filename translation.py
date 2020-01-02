@@ -4,6 +4,9 @@ import numpy as np
 translator = Translator()
 names = ['Finland#liigaUsersIDData', 'Finland#VeikkausliigaUsersIDData',
          'Sweden#AllsvenskanUsersIDData', 'Sweden#SHLUsersIDData']
+
+# Denmark icehockey league 'metalligaen' excluded since it found only one user
+names_dk_no = ['Denmark#sldkUsersIDData', 'Norway#getligaenUsersIDData', 'Norway#eliteserienUsersIDData'] 
 # df = pd.read_csv('./data/' + 'Finland#liigaUsersIDData' + '.csv', header=0, encoding='cp1252')
 # df['translated'] = "null"
 # df.to_csv('./data/' + 'Finland#liigaUsersIDData' + '.csv', header=True, encoding='cp1252')
