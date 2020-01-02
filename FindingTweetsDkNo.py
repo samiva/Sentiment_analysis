@@ -23,8 +23,8 @@ with open("twitter_credentials_sentanal.json", "r") as file:
 
 python_tweets = Twython(creds['CONSUMER_KEY'], creds['CONSUMER_SECRET'],
                         creds['ACCESS_TOKEN'], creds['ACCESS_SECRET'])
-
-names = ['Denmark#MetalligaenUsersID','Denmark#sldkUsersID','Norway#getligaenUsersID','Norway#eliteserienUsersID']
+#exclude metalligaen
+names = ['Denmark#sldkUsersID','Norway#getligaenUsersID','Norway#eliteserienUsersID']
 for n in names:
     df = pd.read_csv('./data/' + n + '.csv', header=None)
     df = df.applymap(str)

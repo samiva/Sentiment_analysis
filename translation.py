@@ -11,7 +11,7 @@ names_dk_no = ['Denmark#sldkUsersIDData', 'Norway#getligaenUsersIDData', 'Norway
 # df['translated'] = "null"
 # df.to_csv('./data/' + 'Finland#liigaUsersIDData' + '.csv', header=True, encoding='cp1252')
 
-for n in names:
+for n in names_dk_no:
     df = pd.read_csv('./data/' + n + '.csv', header=0,
                      encoding='cp1252')
     print(n)
@@ -25,13 +25,14 @@ for n in names:
                     clean_str = ''.join(
                         [c for c in txt if ord(c) < 128 or ord(c) == 228 or ord(c) == 229 or ord(c) == 246])
                     df.loc[index, 'translated'] = clean_str
+                    print(df.loc[index, 'translated'])
                 except Exception as e:
                     print(str(e))
                     continue
     # new_df = pd.DataFrame({'Translated': []})
     # df_list = np.array_split(df, 50)
     # index = 0
-    # for i in df_list:
+    # for i in df_list: 
     #     try:
     #         text_list = i['text'].tolist()
     #         translator = Translator()

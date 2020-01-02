@@ -24,7 +24,7 @@ def tokenize_tweets(tweet):
 
 names = ['Finland#liigaUsersIDData', 'Finland#VeikkausliigaUsersIDData',
          'Sweden#AllsvenskanUsersID', 'Sweden#SHLUsersIDData']
-
+names_dk_no = ['Denmark#sldkUsersIDData', 'Norway#getligaenUsersIDData', 'Norway#eliteserienUsersIDData']
 
 def _create_frequency_matrix(tweet):
     frequency_matrix = {}
@@ -68,7 +68,7 @@ def _create_tf_idf_matrix(tf_matrix, idf_matrix):
     return tf_idf_matrix
 
 
-df = pd.read_csv('./data/' + names[0] + '.csv', header=0,
+df = pd.read_csv('./data/' + names_dk_no[0] + '.csv', header=0,
                  encoding='cp1252')
 
 mwe_tokenizer = MWETokenizer([('new', 'york')])
