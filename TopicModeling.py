@@ -1,10 +1,19 @@
 # packages to store and manipulate data
 import pandas as pd
+from bokeh.io import push_notebook, show, output_notebook, export_png
+from bokeh.plotting import figure
+from bokeh.models import ColumnDataSource, LabelSet
+output_notebook()
+
+import numpy as np
 import re
 from gensim import models, corpora
 from nltk import word_tokenize
 from nltk.corpus import stopwords
 from gensim import similarities
+
+from sklearn.decomposition import NMF, LatentDirichletAllocation, TruncatedSVD
+from sklearn.feature_extraction.text import CountVectorizer
 
 dataset_name = 'Finland#liigaUsersIDData'
 # import dataset
@@ -45,7 +54,9 @@ corpus = [dictionary.doc2bow(text) for text in tokenized_data]
 # Have a look at how the 20th document looks like: [(word_id, count), ...]
 print(corpus[5])
 # [(12, 3), (14, 1), (21, 1), (25, 5), (30, 2), (31, 5), (33, 1), (42, 1), (43, 2),  ...
- 
+# uncomment these to get consistent values everytime between runs
+""" FIXED_SEED = 50
+np.random.seed(FIXED_SEED) """
 # Build the LDA model
 lda_model = models.LdaModel(corpus=corpus, num_topics=NUM_TOPICS, id2word=dictionary)
  
@@ -60,7 +71,7 @@ for idx in range(NUM_TOPICS):
  
 print("=" * 20)
  
-text = 'top score'
+text = 'league standings'
 bow = dictionary.doc2bow(clean_text(text))
 lda_index = similarities.MatrixSimilarity(lda_model[corpus])
  
@@ -76,3 +87,27 @@ print(similarities[:10])
 # Let's see what's the most similar document
 document_id, similarity = similarities[0]
 print(data[document_id][:1000])
+
+vectorizer = CountVectorizer(min_df=5, max_df=0.9, 
+                             stop_words='english', lowercase=True, 
+                             token_pattern=r'[a-zA-Z\-][a-zA-Z\-]{2,}')
+data_vectorized = vectorizer.fit_transform(data)
+
+svd = TruncatedSVD(n_components=2)
+documents_2d = svd.fit_transform(data_vectorized)
+ 
+df = pd.DataFrame(columns=['x', 'y', 'document'])
+print(df['document'].head(5 ))
+df['x'], df['y'], df['document'] = documents_2d[:,0], documents_2d[:,1], range(len(data))
+ 
+source = ColumnDataSource(ColumnDataSource.from_df(df))
+labels = LabelSet(x="x", y="y", text="document", y_offset=8,
+                  text_font_size="8pt", text_color="#555555",
+                  source=source, text_align='center')
+ 
+plot = figure(plot_width=600, plot_height=600)
+plot.circle("x", "y", size=12, source=source, line_color="black", fill_alpha=0.8)
+plot.add_layout(labels)
+export_png(plot, filename='topics_Liiga.png')
+
+ 
