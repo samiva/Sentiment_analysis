@@ -15,23 +15,28 @@ from gensim import similarities
 from sklearn.decomposition import NMF, LatentDirichletAllocation, TruncatedSVD
 from sklearn.feature_extraction.text import CountVectorizer
 
-dataset_name = 'Finland#liigaUsersIDData'
-# import dataset
-df = pd.read_csv('./data/' + dataset_name + '.csv', header=0,
-                 encoding='cp1252')
-data = []
-for index, row in df.iterrows():
-    if pd.isnull(row['translated']):
-        continue
-    else:
-        data.append(row['translated'])
+savepath ='./data/'
 
-# Remove retweets
-data = [x for x in data if x[:2] != 'RT']
+dataset_names = ['Finland#liigaUsersIDData']
 
-data = list(map(lambda x: re.sub(r'http\S+', '', x), data))
-for i in data:
-    print(i)
+def extract_tweets_dataset(dataset_name):
+    # import dataset
+    df = pd.read_csv('./data/' + dataset_name + '.csv', header=0,
+                    encoding='cp1252')
+    data = []
+    for index, row in df.iterrows():
+        if pd.isnull(row['translated']):
+            continue
+        else:
+            data.append(row['translated'])
+
+    # Remove retweets
+    data = [x for x in data if x[:2] != 'RT']
+
+    data = list(map(lambda x: re.sub(r'http\S+', '', x), data))
+    for i in data:
+        print(i)
+
 NUM_TOPICS = 20
 STOPWORDS = stopwords.words('english')
  
@@ -71,7 +76,7 @@ for idx in range(NUM_TOPICS):
  
 print("=" * 20)
  
-text = 'league standings'
+""" text = 'league standings'
 bow = dictionary.doc2bow(clean_text(text))
 lda_index = similarities.MatrixSimilarity(lda_model[corpus])
  
@@ -86,7 +91,7 @@ print(similarities[:10])
  
 # Let's see what's the most similar document
 document_id, similarity = similarities[0]
-print(data[document_id][:1000])
+print(data[document_id][:1000]) """
 
 vectorizer = CountVectorizer(min_df=5, max_df=0.9, 
                              stop_words='english', lowercase=True, 
@@ -94,11 +99,11 @@ vectorizer = CountVectorizer(min_df=5, max_df=0.9,
 data_vectorized = vectorizer.fit_transform(data)
 
 svd = TruncatedSVD(n_components=2)
-documents_2d = svd.fit_transform(data_vectorized)
+documents_2d = svd.fit_transform(data_vectorized.T)
  
 df = pd.DataFrame(columns=['x', 'y', 'document'])
 print(df['document'].head(5 ))
-df['x'], df['y'], df['document'] = documents_2d[:,0], documents_2d[:,1], range(len(data))
+df['x'], df['y'], df['document'] = documents_2d[:,0], documents_2d[:,1], vectorizer.get_feature_names()
  
 source = ColumnDataSource(ColumnDataSource.from_df(df))
 labels = LabelSet(x="x", y="y", text="document", y_offset=8,
@@ -108,6 +113,6 @@ labels = LabelSet(x="x", y="y", text="document", y_offset=8,
 plot = figure(plot_width=600, plot_height=600)
 plot.circle("x", "y", size=12, source=source, line_color="black", fill_alpha=0.8)
 plot.add_layout(labels)
-export_png(plot, filename='topics_Liiga.png')
+export_png(plot, filename=savepath + 'topics_Liiga.png')
 
  
