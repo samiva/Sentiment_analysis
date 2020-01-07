@@ -15,6 +15,9 @@ from gensim import similarities
 from sklearn.decomposition import NMF, LatentDirichletAllocation, TruncatedSVD
 from sklearn.feature_extraction.text import CountVectorizer
 
+import pyLDAvis
+import pyLDAvis.gensim
+
 def remove_stopwords(sentence):
     words = sentence.split(' ')
     words = list(map(lambda w: w.lower(), words))
@@ -52,7 +55,7 @@ dataset_names = ['Finland#liigaUsersIDData', 'Finland#VeikkausliigaUsersIDData',
                 'Norway#getligaenUsersIDData', 'Norway#eliteserienUsersIDData',
                 'Denmark#sldkUsersIDData']
 
-NUM_TOPICS = 20
+NUM_TOPICS = 10
 STOPWORDS = stopwords.words('english')
 if __name__=='__main__':
     for dataset_name in dataset_names:
@@ -105,6 +108,10 @@ if __name__=='__main__':
         # Let's see what's the most similar document
         document_id, similarity = similarities[0]
         print(data[document_id][:1000]) """
+        
+        pyLDAvis.enable_notebook()
+        vis = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary)
+        pyLDAvis.show(vis)
 
         vectorizer = CountVectorizer(min_df=5, max_df=0.9, 
                                     stop_words='english', lowercase=True, 
@@ -128,4 +135,4 @@ if __name__=='__main__':
         plot.add_layout(labels)
         print(remove_stopwords("They don't see the sun very often in winter"))
         export_png(plot, filename=savepath + dataset_name + '.png')
-        
+        break
