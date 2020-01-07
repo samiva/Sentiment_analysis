@@ -15,6 +15,10 @@ from gensim import similarities
 from sklearn.decomposition import NMF, LatentDirichletAllocation, TruncatedSVD
 from sklearn.feature_extraction.text import CountVectorizer
 
+def remove_stopwords(sentence):
+    words = sentence.split(' ')
+    words = list(map(lambda w: w.lower(), words))
+    return " ".join([w.lower() for w in words if w not in STOPWORDS])
 
 def extract_tweets_dataset(dataset_name):
     # import dataset
@@ -30,6 +34,7 @@ def extract_tweets_dataset(dataset_name):
     # Remove retweets
     data = [x for x in data if x[:2] != 'RT']
 
+    data = map(lambda s: s.lower(),data)
     data = list(map(lambda x: re.sub(r'http\S+', '', x), data))
     for i in data:
         print(i)
@@ -121,5 +126,6 @@ if __name__=='__main__':
         plot = figure(plot_width=600, plot_height=600)
         plot.circle("x", "y", size=12, source=source, line_color="black", fill_alpha=0.8)
         plot.add_layout(labels)
+        print(remove_stopwords("They don't see the sun very often in winter"))
         export_png(plot, filename=savepath + dataset_name + '.png')
         
