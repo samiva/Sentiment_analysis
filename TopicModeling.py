@@ -108,10 +108,13 @@ if __name__=='__main__':
         # Let's see what's the most similar document
         document_id, similarity = similarities[0]
         print(data[document_id][:1000]) """
-        
-        pyLDAvis.enable_notebook()
+        top_topics = lda_model.top_topics(corpus, data, dictionary, topn=10)
+        for t in top_topics:
+            print(t)
+        # pyLDAvis.enable_notebook()
         vis = pyLDAvis.gensim.prepare(lda_model, corpus, dictionary)
-        pyLDAvis.show(vis)
+        # pyLDAvis.show(vis)
+        pyLDAvis.save_html(vis,savepath + dataset_name + '.html' )
 
         vectorizer = CountVectorizer(min_df=5, max_df=0.9, 
                                     stop_words='english', lowercase=True, 
@@ -135,4 +138,4 @@ if __name__=='__main__':
         plot.add_layout(labels)
         print(remove_stopwords("They don't see the sun very often in winter"))
         export_png(plot, filename=savepath + dataset_name + '.png')
-        break
+        
