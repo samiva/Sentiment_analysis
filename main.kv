@@ -1,0 +1,74 @@
+MyCustomBoxLayout:
+    do_default_tab: False
+    TabbedPanelItem:
+        text: 'Finland'
+        GridLayout:
+            cols: 3            
+            Label:
+                text: 'Liiga - ice hockey'
+            Button:
+                text: "Frequency"
+                on_press: root.finland_ice_token_freq()
+            Button:
+                text: 'Topic models'
+                on_press: root.finland_ice_lda()
+            Label:
+                text: 'Veikkausliiga - football'
+            Button:
+                text: 'Frequeny'
+                on_press: root.finland_football_token_freq()
+            Button:
+                text: 'Topic models'
+                on_press: root.finland_football_lda()
+    TabbedPanelItem:
+        text: 'Sweden'
+        GridLayout:
+            cols: 3
+            Label:
+                text: 'Allsvenskan - football'
+            Button:
+                text:   "Frequency"
+                on_press: root.sweden_football_token_freq()
+            Button:
+                text: 'Topic models'
+                on_press: root.sweden_football_lda()
+            Label:
+                text: 'SHL - ice hockey'
+            Button:
+                text: 'Frequency'
+                on_press: root.sweden_ice_token_freq()
+            Button:
+                text: 'Topic models'
+                on_press: root.sweden_ice_lda()
+    TabbedPanelItem:
+        text: 'Denmark'
+        GridLayout:
+            cols: 3
+            Label:
+                text: 'Super League - football'
+            Button:
+                text: 'Frequency'
+                on_press: root.denmark_football_token_freq()
+            Button:
+                text: 'Topic models'
+                on_press: root.denmark_football_lda()
+    TabbedPanelItem:
+        text: 'Norway'
+        GridLayout:
+            cols: 3
+            Label:
+                text: 'Eliteserien - football'
+            Button:
+                text: 'Frequency'
+                on_press: root.norway_football_token_freq()
+            Button:
+                text: 'Topic models'
+                on_press: root.norway_football_lda()
+            Label:
+                text: 'GET-ligaen - ice hockey'
+            Button:
+                text: 'Frequency'
+                on_press: root.norway_ice_token_freq()
+            Button:
+                text: 'Topic models'
+                on_press: root.norway_ice_lda()

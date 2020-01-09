@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from nltk.tokenize import MWETokenizer
 import math as math
+import operator
 
 
 def tokenize_tweets(tweet):
@@ -16,15 +17,18 @@ def tokenize_tweets(tweet):
     twt = nltk.tokenize.TweetTokenizer(strip_handles=True, reduce_len=True)
     # combine stop words and punctuation
     stop = stopwords.words("english") + list(string.punctuation)
-
+    # ReTweets
+    stop.append('rt')
     filtered_sentence = [token.lower() for token in twt.tokenize(tweet)
                          if token.lower() not in stop]
     return(filtered_sentence)
 
 
-names = ['Finland#liigaUsersIDData', 'Finland#VeikkausliigaUsersIDData',
-         'Sweden#AllsvenskanUsersID', 'Sweden#SHLUsersIDData']
-names_dk_no = ['Denmark#sldkUsersIDData', 'Norway#getligaenUsersIDData', 'Norway#eliteserienUsersIDData']
+names_fi_sw = ['Finland#liigaUsersIDData', 'Finland#VeikkausliigaUsersIDData',
+               'Sweden#AllsvenskanUsersIDData', 'Sweden#SHLUsersIDData']
+names_dk_no = ['Denmark#sldkUsersIDData',
+               'Norway#getligaenUsersIDData', 'Norway#eliteserienUsersIDData']
+
 
 def _create_frequency_matrix(tweet):
     frequency_matrix = {}
@@ -36,6 +40,20 @@ def _create_frequency_matrix(tweet):
     return frequency_matrix
 
 
+def _create_frequency_matrix_per_organiztion(freq_matrix):
+    organization_frequency_matrix = {}
+
+    for doc in freq_matrix:
+        for token, frequency in doc.items():
+            if token in organization_frequency_matrix:
+                organization_frequency_matrix[token] += frequency
+            else:
+                organization_frequency_matrix[token] = 1
+
+    return organization_frequency_matrix
+
+
+# number of documents that contains tokens
 def _create_tf_matrix(freq_matrix):
     tf_matrix = {}
     for doc in freq_matrix:
@@ -68,17 +86,28 @@ def _create_tf_idf_matrix(tf_matrix, idf_matrix):
     return tf_idf_matrix
 
 
-df = pd.read_csv('./data/' + names_dk_no[0] + '.csv', header=0,
-                 encoding='cp1252')
+def GetFreqMat(address):
+    result = Tokenize(address)
+    list1 = (sorted(result['freq_org'].items(),
+                    key=lambda item: item[1], reverse=True))
+    print(list1)
+    df = pd.DataFrame(list1[0:10],
+                      columns=['terms', 'frequency'])
+    df.plot(kind='barh', x='terms', y='frequency')
+    plt.show()
 
-mwe_tokenizer = MWETokenizer([('new', 'york')])
-tokens = []
-frequency_matrix = []
-tf_matrix = {}
-idf_matrix = {}
-tf_idf_matrix = {}
-for index, row in df.iterrows():
-    if(index < 400):
+
+def Tokenize(address):
+    df = pd.read_csv(address, header=0,
+                     encoding='cp1252')
+    mwe_tokenizer = MWETokenizer([('new', 'york')])
+    tokens = []
+    frequency_matrix = []
+    frequency_matrix_organization = {}
+    tf_matrix = {}
+    idf_matrix = {}
+    tf_idf_matrix = {}
+    for index, row in df.iterrows():
         try:
             if(pd.isnull(row['translated'])):
                 token = tokenize_tweets(row['text'])
@@ -90,7 +119,6 @@ for index, row in df.iterrows():
                 # frequency matrix
                 frq_matrix = _create_frequency_matrix(new_token)
                 frequency_matrix.append(frq_matrix)
-                # tf_matrix.append(_create_tf_matrix(frq_matrix))
             else:
                 token = tokenize_tweets(row['translated'])
                 # link to the tweeter is removed
@@ -101,26 +129,37 @@ for index, row in df.iterrows():
                 # frequency matrix
                 frq_matrix = _create_frequency_matrix(new_token)
                 frequency_matrix.append(frq_matrix)
-                # tf_matrix.append(_create_tf_matrix(frq_matrix))
 
         except Exception as e:
-            print(index)
-            print(str(e))
+            # print(index)
+            # print(str(e))
             continue
-tf_matrix = _create_tf_matrix(frequency_matrix)
-idf_matrix = _create_idf_matrix(tf_matrix, 400)
-tf_idf_matrix = _create_tf_idf_matrix(tf_matrix, idf_matrix)
-print(tf_matrix)
-print(idf_matrix)
-print(tf_idf_matrix)
-# size of the dataframe
-# print(len(df.index))
-# print(frequency_matrix)
-# print(tf_matrix)
-flat_list = [item for sublist in tokens for item in sublist]
-tokens_count = Counter(flat_list)
-df = pd.DataFrame(tokens_count.most_common(10), columns=['terms', 'frequency'])
-df['frequency'] = df['frequency'].apply(lambda x: (x / 400) * 100)
-print(df)
-df.plot(kind='barh', x='terms', y='frequency')
-plt.show()
+    tf_matrix = _create_tf_matrix(frequency_matrix)
+    idf_matrix = _create_idf_matrix(tf_matrix, len(df.index))
+    tf_idf_matrix = _create_tf_idf_matrix(tf_matrix, idf_matrix)
+    frequency_matrix_organization = _create_frequency_matrix_per_organiztion(
+        frequency_matrix)
+    print(idf_matrix)
+    print(tf_idf_matrix)
+
+    print(frequency_matrix_organization)
+    # print(frequency_matrix_organization)
+    # print(frequency_matrix)
+    # print(tf_matrix)
+    # size of the dataframe
+    # print(len(df.index))
+    # print(sorted(tf_matrix.items(), key=lambda item: item[1], reverse=True))
+    # list1 = (sorted(frequency_matrix_organization.items(),
+    #                 key=lambda item: item[1], reverse=True))
+    # print(list1)
+    # flat_list = [item for sublist in tokens for item in sublist]
+    # print(flat_list)
+    # tokens_count = Counter(flat_list)
+    return {"freq_org": frequency_matrix_organization,
+            "tf": tf_matrix,
+            "idf": idf_matrix,
+            "tf_idf": tf_idf_matrix}
+
+
+if __name__ == '__main__':
+    Tokenize('./data/' + names_dk_no[1] + '.csv')
